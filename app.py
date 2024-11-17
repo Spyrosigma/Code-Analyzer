@@ -78,6 +78,7 @@ def plot_dependency_network(G):
         hoverinfo='text',
         text=[str(node) for node in G.nodes()],
         textposition="bottom center",
+        textfont=dict(color='black'),  # Change text color to black
         marker=dict(
             size=10,
             color='#007bff',
@@ -87,7 +88,7 @@ def plot_dependency_network(G):
         title='Code Dependency Network',
         showlegend=False,
         hovermode='closest',
-        margin=dict(b=20,l=5,r=5,t=40),
+        margin=dict(b=20, l=5, r=5, t=40),
         plot_bgcolor='white'
     )
     
