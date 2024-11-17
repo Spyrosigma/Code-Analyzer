@@ -1,0 +1,228 @@
+{
+    "files_analyzed": 3,
+    "total_functions": 7,
+    "total_classes": 0,
+    "imports": {
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\app.py": [
+            "ConversationChain",
+            "Flask",
+            "leave_room",
+            "flask",
+            "emit",
+            "ChatGroq",
+            "langchain.memory",
+            "langchain_groq",
+            "langchain_core.prompts",
+            "request",
+            "langchain.chains",
+            "os",
+            "join_room",
+            "requests",
+            "SocketIO",
+            "warnings",
+            "flask_cors",
+            "flask_socketio",
+            "HumanMessagePromptTemplate",
+            "pinecone",
+            "uuid",
+            "Pinecone",
+            "langchain_core.messages",
+            "MessagesPlaceholder",
+            "dotenv",
+            "ConversationBufferMemory",
+            "CORS",
+            "jsonify",
+            "load_dotenv",
+            "SystemMessage",
+            "ChatPromptTemplate"
+        ],
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\ipfs_data.py": [
+            "send_file",
+            "Flask",
+            "jsonify",
+            "requests",
+            "json",
+            "flask"
+        ],
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\memory_save.py": [
+            "dotenv",
+            "os",
+            "requests",
+            "pinecone",
+            "load_dotenv",
+            "uuid",
+            "Pinecone"
+        ],
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\pdfreader.py": [
+            "pathlib",
+            "pymupdf4llm"
+        ],
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\server.py": [
+            "sys",
+            "gunicorn.app.wsgiapp",
+            "run"
+        ]
+    },
+    "function_relationships": {
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\app.py": {
+            "welcome": [],
+            "handle_connect": [
+                "join_room",
+                "print",
+                "emit",
+                "str"
+            ],
+            "on_join": [
+                "join_room",
+                "print"
+            ],
+            "handle_disconnect": [
+                "print"
+            ],
+            "handle_message": [
+                "MessagesPlaceholder",
+                "ConversationChain",
+                "print",
+                "ConversationBufferMemory",
+                "SystemMessage",
+                "emit",
+                "str"
+            ]
+        },
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\ipfs_data.py": {
+            "fetch_ipfs_file": []
+        },
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\memory_save.py": {
+            "memory_upload": [
+                "print",
+                "Pinecone",
+                "str"
+            ]
+        }
+    },
+    "class_hierarchy": {},
+    "metrics": {
+        "node_frequencies": {
+            "module": 5,
+            "import_from_statement": 14,
+            "from": 14,
+            "dotted_name": 49,
+            "identifier": 304,
+            "import": 22,
+            ",": 60,
+            "import_statement": 8,
+            ".": 49,
+            "(": 72,
+            ")": 72,
+            "expression_statement": 60,
+            "call": 64,
+            "attribute": 43,
+            "argument_list": 64,
+            "string": 86,
+            "string_start": 86,
+            "string_content": 91,
+            "string_end": 86,
+            "assignment": 37,
+            "=": 67,
+            "subscript": 22,
+            "[": 27,
+            "]": 27,
+            "keyword_argument": 30,
+            "float": 1,
+            "decorated_definition": 5,
+            "decorator": 5,
+            "@": 5,
+            "function_definition": 7,
+            "def": 7,
+            "parameters": 7,
+            ":": 33,
+            "block": 16,
+            "return_statement": 5,
+            "return": 5,
+            "dictionary": 9,
+            "{": 20,
+            "pair": 17,
+            "}": 20,
+            "interpolation": 11,
+            "try_statement": 2,
+            "try": 2,
+            "list": 5,
+            "integer": 8,
+            "false": 4,
+            "true": 3,
+            "escape_sequence": 2,
+            "if_statement": 4,
+            "if": 4,
+            "comparison_operator": 4,
+            "not in": 1,
+            "not": 1,
+            "in": 1,
+            "except_clause": 2,
+            "except": 2,
+            "as_pattern": 2,
+            "as": 2,
+            "as_pattern_target": 2,
+            "==": 3,
+            "comment": 5,
+            "else_clause": 1,
+            "else": 1,
+            "\\": 1
+        },
+        "function_call_patterns": {},
+        "class_usage": {},
+        "import_dependencies": {
+            "flask": [
+                ""
+            ],
+            "flask_cors": [
+                ""
+            ],
+            "flask_socketio": [
+                ""
+            ],
+            "os": [
+                ""
+            ],
+            "dotenv": [
+                ""
+            ],
+            "pinecone": [
+                ""
+            ],
+            "langchain.chains": [
+                ""
+            ],
+            "langchain.memory": [
+                ""
+            ],
+            "langchain_core.prompts": [
+                ""
+            ],
+            "langchain_core.messages": [
+                ""
+            ],
+            "langchain_groq": [
+                ""
+            ],
+            "warnings": [
+                ""
+            ],
+            "requests": [
+                ""
+            ],
+            "pymupdf4llm": [
+                ""
+            ],
+            "pathlib": [
+                ""
+            ],
+            "sys": [
+                ""
+            ],
+            "gunicorn.app.wsgiapp": [
+                ""
+            ]
+        }
+    },
+    "chunks": []
+}
