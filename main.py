@@ -19,45 +19,206 @@ class CodeMetrics:
 
 class CodeAnalyzer:
     def __init__(self):
-
         self.PY_LANGUAGE = Language(tspython.language())
         self.parser = Parser(self.PY_LANGUAGE)
-
-        # Graph for storing relationships
         self.dependency_graph = nx.DiGraph()
         self.metrics = CodeMetrics()
-        # Storage for analyzed data
         self.functions = defaultdict(dict)
         self.classes = defaultdict(dict)
         self.imports = defaultdict(set)
+        self.file_contents = {}  # Store file contents for extraction
         
-    # def analyze_file(self, file_path: str) -> None:
-    #     """Analyze a single file and extract its components."""
-    #     with open(file_path, 'rb') as f:
-    #         content = f.read()
-            
-    #     tree = self.parser.parse(content)
-        
-    #     # Extract components
-    #     self._extract_functions(tree.root_node, file_path)
-    #     self._extract_classes(tree.root_node, file_path)
-    #     self._extract_imports(tree.root_node, file_path)
-
     def analyze_file(self, file_path: str) -> None:
         """Analyze a single file and extract its components."""
         with open(file_path, 'rb') as f:
             content = f.read()
             
+        # Store the file content for later extraction
+        self.file_contents[file_path] = content
+        
         tree = self.parser.parse(content)
         
-        # Extract basic components
+        # Extract components
         self._extract_functions(tree.root_node, file_path)
         self._extract_classes(tree.root_node, file_path)
         self._extract_imports(tree.root_node, file_path)
-    
-        # Perform enhanced relationship analysis
         self._analyze_relationships(tree.root_node)
         
+    def _extract_code_segment(self, file_path: str, start_point: Tuple[int, int], end_point: Tuple[int, int]) -> str:
+        """Extract the actual code content from a file given start and end points."""
+        if file_path not in self.file_contents:
+            return ""
+            
+        content = self.file_contents[file_path]
+        lines = content.split(b'\n')
+        
+        # Extract the relevant lines
+        start_line, start_col = start_point
+        end_line, end_col = end_point
+        
+        if start_line == end_line:
+            return lines[start_line][start_col:end_col].decode('utf-8')
+            
+        code_lines = []
+        # First line
+        code_lines.append(lines[start_line][start_col:].decode('utf-8'))
+        # Middle lines
+        for line in lines[start_line + 1:end_line]:
+            code_lines.append(line.decode('utf-8'))
+        # Last line
+        if end_line < len(lines):
+            code_lines.append(lines[end_line][:end_col].decode('utf-8'))
+            
+        return '\n'.join(code_lines)
+
+    def create_chunks(self, max_chunk_size: int = 1000) -> List[Dict]:
+        """Create semantic chunks of the codebase with actual code content."""
+        chunks = []
+        current_chunk = {
+            'content': [],
+            'context': [],
+            'relationships': []
+        }
+        
+        # Group related functions and classes
+        for file_path, file_functions in self.functions.items():
+            for func_name, func_data in file_functions.items():
+                # Extract actual code content
+                code_content = self._extract_code_segment(
+                    file_path,
+                    func_data['start'],
+                    func_data['end']
+                )
+                
+                chunk_content = {
+                    'type': 'function',
+                    'name': func_name,
+                    'file': file_path,
+                    'code': code_content,
+                    'context': {
+                        'docstring': func_data['context']['docstring'],
+                        'parameters': func_data['context']['parameters'],
+                        'calls': list(func_data['calls'])
+                    }
+                }
+                
+                # Add relationships
+                relationships = []
+                for call in func_data['calls']:
+                    relationships.append({
+                        'type': 'calls',
+                        'source': func_name,
+                        'target': call
+                    })
+                
+                if len(str(current_chunk)) + len(str(chunk_content)) > max_chunk_size:
+                    chunks.append(current_chunk)
+                    current_chunk = {
+                        'content': [],
+                        'context': [],
+                        'relationships': []
+                    }
+                    
+                current_chunk['content'].append(chunk_content)
+                current_chunk['relationships'].extend(relationships)
+                
+        if current_chunk['content']:
+            chunks.append(current_chunk)
+            
+        return chunks
+    
+    def enhanced_chunk_creation(self) -> List[Dict]:
+        """Create sophisticated chunks with actual code content."""
+        chunks = []
+        
+        # Group by classes
+        for file_path, classes in self.classes.items():
+            for class_name, class_data in classes.items():
+                # Find class node and extract code
+                class_code = self._find_and_extract_class_code(file_path, class_name)
+                
+                class_chunk = {
+                    'type': 'class',
+                    'name': class_name,
+                    'file': file_path,
+                    'code': class_code,
+                    'methods': {},
+                    'inheritance': class_data['inheritance']
+                }
+                
+                # Extract method codes
+                for method_name, method_data in class_data['methods'].items():
+                    method_code = self._extract_code_segment(
+                        file_path,
+                        method_data['context'].get('start_point', (0, 0)),
+                        method_data['context'].get('end_point', (0, 0))
+                    )
+                    class_chunk['methods'][method_name] = {
+                        'code': method_code,
+                        'calls': list(method_data['calls']),
+                        'context': method_data['context']
+                    }
+                
+                chunks.append(class_chunk)
+        
+        # Group related functions
+        function_groups = self._group_related_functions()
+        for group in function_groups:
+            func_chunks = []
+            for func_name in group:
+                for file_path, file_funcs in self.functions.items():
+                    if func_name in file_funcs:
+                        func_data = file_funcs[func_name]
+                        code_content = self._extract_code_segment(
+                            file_path,
+                            func_data['start'],
+                            func_data['end']
+                        )
+                        func_chunks.append({
+                            'name': func_name,
+                            'code': code_content,
+                            'file': file_path,
+                            'calls': list(self.metrics.function_calls[func_name]),
+                            'context': func_data['context']
+                        })
+            
+            if func_chunks:
+                chunks.append({
+                    'type': 'function_group',
+                    'functions': func_chunks
+                })
+        
+        return chunks
+    
+    def _find_and_extract_class_code(self, file_path: str, class_name: str) -> str:
+        """Find and extract the complete class code from the file."""
+        if file_path not in self.file_contents:
+            return ""
+            
+        content = self.file_contents[file_path]
+        tree = self.parser.parse(content)
+        
+        def find_class_node(node):
+            if node.type == 'class_definition':
+                for child in node.children:
+                    if (child.type == 'identifier' and 
+                        child.text.decode('utf-8') == class_name):
+                        return node
+            for child in node.children:
+                result = find_class_node(child)
+                if result:
+                    return result
+            return None
+        
+        class_node = find_class_node(tree.root_node)
+        if class_node:
+            return self._extract_code_segment(
+                file_path,
+                class_node.start_point,
+                class_node.end_point
+            )
+        return ""
+
     def _extract_functions(self, node, file_path: str) -> None:
         """Extract function definitions and their relationships."""
         if node.type == 'function_definition':
@@ -175,55 +336,6 @@ class CodeAnalyzer:
                     
         for child in node.children:
             self._extract_imports(child, file_path)
-            
-    def create_chunks(self, max_chunk_size: int = 1000) -> List[Dict]:
-        """Create semantic chunks of the codebase."""
-        chunks = []
-        current_chunk = {
-            'content': [],
-            'context': [],
-            'relationships': []
-        }
-        
-        # Group related functions and classes
-        for file_path, file_functions in self.functions.items():
-            for func_name, func_data in file_functions.items():
-                # Create chunk based on function and its related calls
-                chunk_content = {
-                    'type': 'function',
-                    'name': func_name,
-                    'file': file_path,
-                    'content': {
-                        'start': func_data['start'],
-                        'end': func_data['end'],
-                        'calls': list(func_data['calls']),  # Convert set to list
-                        'context': func_data['context']
-                    }
-                }
-                
-                # Add relationships
-                relationships = []
-                for call in func_data['calls']:
-                    relationships.append({
-                        'type': 'calls',
-                        'target': call
-                    })
-                
-                if len(str(current_chunk)) + len(str(chunk_content)) > max_chunk_size:
-                    chunks.append(current_chunk)
-                    current_chunk = {
-                        'content': [],
-                        'context': [],
-                        'relationships': []
-                    }
-                    
-                current_chunk['content'].append(chunk_content)
-                current_chunk['relationships'].extend(relationships)
-                
-        if current_chunk['content']:
-            chunks.append(current_chunk)
-            
-        return chunks
     
     def generate_report(self) -> Dict:
         """Generate a comprehensive analysis report."""
@@ -320,48 +432,6 @@ class CodeAnalyzer:
             context = f"{current_class or ''}.{current_function or ''}"
             self.metrics.import_usage[import_name].add(context.strip('.'))
 
-    def enhanced_chunk_creation(self) -> List[Dict]:
-        """Create more sophisticated chunks based on code analysis."""
-        chunks = []
-        
-        # Group by logical units (classes and their related functions)
-        for file_path, classes in self.classes.items():
-            for class_name, class_data in classes.items():
-                class_chunk = {
-                    'type': 'class',
-                    'name': class_name,
-                    'file': file_path,
-                    'methods': class_data['methods'],
-                    'inheritance': class_data['inheritance'],
-                    'instances': list(self.metrics.class_instances[class_name]),
-                    'method_relationships': {
-                        method: list(calls)
-                        for method, calls in self.metrics.method_calls[class_name].items()
-                    }
-                }
-                chunks.append(class_chunk)
-        
-        # Group related functions (based on call patterns)
-        function_groups = self._group_related_functions()
-        for group in function_groups:
-            func_chunk = {
-                'type': 'function_group',
-                'functions': [
-                    {
-                        'name': func,
-                        'calls': list(self.metrics.function_calls[func]),
-                        'import_dependencies': [
-                            imp for imp, usages in self.metrics.import_usage.items()
-                            if func in usages
-                        ]
-                    }
-                    for func in group
-                ]
-            }
-            chunks.append(func_chunk)
-        
-        return chunks
-
     def _group_related_functions(self) -> List[Set[str]]:
         """Group functions based on their relationships."""
         groups = []
@@ -413,30 +483,6 @@ class CodeAnalyzer:
         }
         
         return enhanced_report
-
-# Example usage
-# def analyze_codebase(root_dir: str) -> None:
-#     analyzer = CodeAnalyzer()
-    
-#     # Analyze all Python files
-#     for root, _, files in os.walk(root_dir):
-#         for file in files:
-#             if file.endswith('.py'):
-#                 file_path = os.path.join(root, file)
-#                 analyzer.analyze_file(file_path)
-    
-#     # Generate chunks and report
-#     chunks = analyzer.create_chunks()
-#     # print('CHUNKS---------', chunks)
-#     report = analyzer.generate_report()
-#     # print('Report ----------',report)
-
-#     # Save results
-#     with open('analysis_report.json', 'w') as f:
-#         json.dump(report, f, indent=4)
-        
-#     with open('code_chunks.json', 'w') as f:
-#         json.dump(chunks, f, indent=4)
 
 def analyze_codebase(root_dir: str, ignore_dirs: set = None) -> None:
     """
@@ -495,7 +541,6 @@ def analyze_codebase(root_dir: str, ignore_dirs: set = None) -> None:
 
 # Example usage:
 if __name__ == "__main__":
-    # Default usage with predefined ignore list
     analyze_codebase("./")
     
     # Or with custom ignore list

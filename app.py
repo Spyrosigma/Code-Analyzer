@@ -11,7 +11,7 @@ from pathlib import Path
 import shutil
 import time
 
-from new import analyze_codebase
+from main import analyze_codebase
 
 # [Previous CodeAnalyzer class and related code would go here]
 
@@ -148,7 +148,7 @@ def main():
     # Input for GitHub repository URL
     repo_url = st.text_input(
         "GitHub Repository URL",
-        placeholder="https://github.com/username/repository"
+        placeholder="https://github.com/Spyrosigma/Code-Analyzer"
     )
     
     # Custom ignore directories
