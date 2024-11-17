@@ -1,75 +1,69 @@
 {
-    "files_analyzed": 3,
-    "total_functions": 7,
+    "files_analyzed": 2,
+    "total_functions": 8,
     "total_classes": 0,
     "imports": {
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\app.py": [
-            "ConversationChain",
-            "Flask",
-            "leave_room",
-            "flask",
-            "emit",
-            "ChatGroq",
-            "langchain.memory",
-            "langchain_groq",
-            "langchain_core.prompts",
-            "request",
-            "langchain.chains",
-            "os",
-            "join_room",
-            "requests",
-            "SocketIO",
-            "warnings",
-            "flask_cors",
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmpukdrokel\\backend\\app.py": [
+            "dotenv",
+            "uuid",
             "flask_socketio",
-            "HumanMessagePromptTemplate",
+            "langchain.memory",
             "pinecone",
-            "uuid",
-            "Pinecone",
-            "langchain_core.messages",
-            "MessagesPlaceholder",
-            "dotenv",
-            "ConversationBufferMemory",
-            "CORS",
-            "jsonify",
-            "load_dotenv",
-            "SystemMessage",
-            "ChatPromptTemplate"
-        ],
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\ipfs_data.py": [
-            "send_file",
-            "Flask",
-            "jsonify",
-            "requests",
-            "json",
-            "flask"
-        ],
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\memory_save.py": [
-            "dotenv",
+            "ChatGroq",
+            "langchain_core.prompts",
+            "flask_cors",
             "os",
+            "SocketIO",
+            "MessagesPlaceholder",
+            "CORS",
+            "ConversationChain",
+            "HumanMessagePromptTemplate",
             "requests",
-            "pinecone",
+            "langchain_core.messages",
+            "flask",
+            "memory_save",
+            "jsonify",
+            "leave_room",
+            "emit",
+            "Flask",
+            "ConversationBufferMemory",
+            "request",
+            "ChatPromptTemplate",
+            "memory_upload",
+            "join_room",
+            "SystemMessage",
+            "Pinecone",
             "load_dotenv",
+            "langchain_groq",
+            "langchain.chains"
+        ],
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmpukdrokel\\backend\\memory_save.py": [
+            "dotenv",
             "uuid",
-            "Pinecone"
-        ],
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\pdfreader.py": [
-            "pathlib",
-            "pymupdf4llm"
-        ],
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\server.py": [
-            "sys",
-            "gunicorn.app.wsgiapp",
-            "run"
+            "pinecone",
+            "Pinecone",
+            "load_dotenv",
+            "requests",
+            "os"
         ]
     },
     "function_relationships": {
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\app.py": {
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmpukdrokel\\backend\\app.py": {
             "welcome": [],
+            "validate_passkey": [
+                "print",
+                "jsonify"
+            ],
+            "save_memory": [
+                "memory_upload",
+                "print",
+                "jsonify",
+                "str"
+            ],
             "handle_connect": [
+                "emit",
                 "join_room",
                 "print",
-                "emit",
                 "str"
             ],
             "on_join": [
@@ -81,20 +75,16 @@
             ],
             "handle_message": [
                 "MessagesPlaceholder",
-                "ConversationChain",
-                "print",
                 "ConversationBufferMemory",
+                "ConversationChain",
                 "SystemMessage",
                 "emit",
+                "print",
                 "str"
             ]
         },
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\ipfs_data.py": {
-            "fetch_ipfs_file": []
-        },
-        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmp_4jsvu10\\memory_save.py": {
+        "C:\\Users\\PC\\AppData\\Local\\Temp\\tmpukdrokel\\backend\\memory_save.py": {
             "memory_upload": [
-                "print",
                 "Pinecone",
                 "str"
             ]
@@ -103,70 +93,73 @@
     "class_hierarchy": {},
     "metrics": {
         "node_frequencies": {
-            "module": 5,
-            "import_from_statement": 14,
-            "from": 14,
-            "dotted_name": 49,
-            "identifier": 304,
-            "import": 22,
-            ",": 60,
-            "import_statement": 8,
-            ".": 49,
-            "(": 72,
-            ")": 72,
-            "expression_statement": 60,
-            "call": 64,
-            "attribute": 43,
-            "argument_list": 64,
-            "string": 86,
-            "string_start": 86,
-            "string_content": 91,
-            "string_end": 86,
-            "assignment": 37,
-            "=": 67,
-            "subscript": 22,
-            "[": 27,
-            "]": 27,
-            "keyword_argument": 30,
+            "module": 2,
+            "import_from_statement": 13,
+            "from": 13,
+            "dotted_name": 39,
+            "identifier": 317,
+            "import": 16,
+            ",": 68,
+            "import_statement": 3,
+            ".": 45,
+            "(": 81,
+            ")": 81,
+            "expression_statement": 65,
+            "call": 72,
+            "argument_list": 72,
+            "assignment": 43,
+            "=": 76,
+            "subscript": 16,
+            "attribute": 41,
+            "[": 23,
+            "string": 109,
+            "string_start": 109,
+            "string_content": 112,
+            "string_end": 109,
+            "]": 23,
+            "keyword_argument": 33,
             "float": 1,
-            "decorated_definition": 5,
-            "decorator": 5,
-            "@": 5,
-            "function_definition": 7,
-            "def": 7,
-            "parameters": 7,
-            ":": 33,
-            "block": 16,
-            "return_statement": 5,
-            "return": 5,
-            "dictionary": 9,
-            "{": 20,
-            "pair": 17,
-            "}": 20,
-            "interpolation": 11,
-            "try_statement": 2,
-            "try": 2,
-            "list": 5,
-            "integer": 8,
-            "false": 4,
-            "true": 3,
-            "escape_sequence": 2,
-            "if_statement": 4,
-            "if": 4,
+            "decorated_definition": 7,
+            "decorator": 7,
+            "@": 7,
+            "function_definition": 8,
+            "def": 8,
+            "parameters": 8,
+            ":": 55,
+            "block": 24,
+            "return_statement": 9,
+            "return": 9,
+            "list": 7,
+            "if_statement": 5,
+            "if": 5,
             "comparison_operator": 4,
-            "not in": 1,
-            "not": 1,
-            "in": 1,
-            "except_clause": 2,
-            "except": 2,
-            "as_pattern": 2,
-            "as": 2,
-            "as_pattern_target": 2,
             "==": 3,
-            "comment": 5,
-            "else_clause": 1,
-            "else": 1,
-            "\\": 1
+            "expression_list": 5,
+            "dictionary": 16,
+            "{": 27,
+            "pair": 31,
+            "true": 3,
+            "}": 27,
+            "integer": 11,
+            "else_clause": 2,
+            "else": 2,
+            "false": 6,
+            "try_statement": 4,
+            "try": 4,
+            "not_operator": 1,
+            "not": 2,
+            "except_clause": 4,
+            "except": 4,
+            "as_pattern": 3,
+            "as": 3,
+            "as_pattern_target": 3,
+            "interpolation": 11,
+            "escape_sequence": 1,
+            "finally_clause": 1,
+            "finally": 1,
+            "not in": 1,
+            "in": 1,
+            "comment": 2
         },
         "function_call_patterns": {},
         "class_usage": {},
@@ -204,22 +197,10 @@
             "langchain_groq": [
                 ""
             ],
-            "warnings": [
+            "memory_save": [
                 ""
             ],
             "requests": [
-                ""
-            ],
-            "pymupdf4llm": [
-                ""
-            ],
-            "pathlib": [
-                ""
-            ],
-            "sys": [
-                ""
-            ],
-            "gunicorn.app.wsgiapp": [
                 ""
             ]
         }

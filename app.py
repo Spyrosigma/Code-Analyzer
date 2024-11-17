@@ -11,7 +11,7 @@ from pathlib import Path
 import shutil
 import time
 
-from main import analyze_codebase
+from new import analyze_codebase
 
 # [Previous CodeAnalyzer class and related code would go here]
 
